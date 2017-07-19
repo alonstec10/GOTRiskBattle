@@ -11,11 +11,6 @@ require_once('classes/PlayerDice.php');
 	Each player sets their Dice amount and how many sides the dice has
 
 ********/
-
-
-
-
-
 class Battle 
 {
 	private $attacker;
@@ -44,22 +39,24 @@ class Battle
 
 		$battleOutcome = new stdClass();
 		$battleOutcome->attacker = 0;
-		$battleOutcome->denfender = 0;
-
+		$battleOutcome->defender = 0;
+		$battleOutcome->defender_rows = $defenderValues;
+		$battleOutcome->attack_rolls = $attackValues;
+	
 		if($attackValues[0] > $defenderValues[0])
 		{
 			$battleOutcome->attacker++;
 		}
 		else 
 		{
-			$battleOutcome->denfender++;
+			$battleOutcome->defender++;
 		}
 
 
 		if($defenderValues[1] && $attackValues[1] > $defenderValues[1]) {
 			$battleOutcome->attacker++;
 		} else {
-			$battleOutcome->denfender++;
+			$battleOutcome->defender++;
 		}
 
 		$this->outcome = $battleOutcome;
