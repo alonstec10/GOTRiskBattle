@@ -11,25 +11,41 @@ require_once('classes/PlayerDice.php');
 	Each player sets their Dice amount and how many sides the dice has
 
 ********/
+
+class BattleException extends Exception {
+
+	const THROW_BATTLE = 0;
+
+}
+
+
+
+
 class Battle 
 {
 	private $attacker;
 	private $denfeder;
 	private $outcome;
 
+	private $outcome_datatype = 'json';
+
+
+	/**
+	* Constructor for Battle class
+	* @param (IPlayerDice) $attacker
+	* @param (IPlayerDice) $defender
+	*/
 	public function __construct(IPlayerDice $attacker, IPlayerDice $defender) 
 	{
 		$this->attacker = $attacker;
 		$this->defender = $defender;
 	}
 
-
-	private function rollAllPlayersDice()
-	{
-		return (object)array('attacker' => $this->attacker->rollAllDice(), 'defender' => $this->defender->rollAllDice());
-
-	}
-
+	/**
+	* Start battle with attacker and defender dice
+	* @return (Mixed) $battleOutcome
+	*/
+	
 
 	public function startBattle()
 	{
@@ -62,6 +78,31 @@ class Battle
 		$this->outcome = $battleOutcome;
 		return json_encode($battleOutcome);	
 	}
+	
+	/**
+	* set outcome data type ex. json, xml
+	*/
+	public function setOutcomeDataType( $datatype )
+	{
+		$datatypes = array('json', 'xml');
+		if( !in_array($datatype, $datatypes) )
+		{
+			$this->outcome_datatype = 'json';			
+		}
+		else 
+		{
+			$this->outcome_datatype = $datatype;
+		}
+	}
+
+
+	/**
+	* Roll all the players Dice
+	*/
+	private function rollAllPlayersDice()
+	{
+		return (object)array('attacker' => $this->attacker->rollAllDice(), 'defender' => $this->defender->rollAllDice());
+	}
 
 
 
@@ -78,5 +119,10 @@ $defenderPlayerDice = new PlayerDice('defender', 2, array(8, 6));
 $battle = new Battle($attackPlayerDice, $defenderPlayerDice);
 
 echo $battle->startBattle();
+
+$xml = new SimpleXMLElement('<xml/>');
+
+echo $xml;
+
 
 ?>

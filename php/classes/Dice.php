@@ -14,7 +14,18 @@ class Dice extends IDice {
 	* @return int	
 	*/
 	public function roll() {
-		return rand ( $this->getDiceMinValue() , $this->getDiceMaxValue() );
+		$this->value = rand( $this->getDiceMinValue(), $this->getDiceMaxValue() );
+		return $this->value;
+	}
+
+	/**
+	* Modify dice roll
+	* @param ( Modify )
+	*/
+	public function modify( Modifier $mod ) 
+	{
+		$this->value = $this->value + $mod->value;	
+		return $this->value;
 	}
 
 }

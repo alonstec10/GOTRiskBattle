@@ -12,7 +12,10 @@ abstract class IDice {
 	private $diceMinValue = 1;
 	private $diceMaxValue = 6;
 
+	protected $value = 0; //value of the dice
+
 	public abstract function roll();
+	public abstract function modify( Modifier $mod);
 
 	/**
 	* Sets the amount of sides for a dice
