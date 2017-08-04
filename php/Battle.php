@@ -56,7 +56,7 @@ class Battle
 		$battleOutcome = new stdClass();
 		$battleOutcome->attacker = 0;
 		$battleOutcome->defender = 0;
-		$battleOutcome->defender_rows = $defenderValues;
+		$battleOutcome->defender_rolls = $defenderValues;
 		$battleOutcome->attack_rolls = $attackValues;
 	
 		if($attackValues[0] > $defenderValues[0])
@@ -76,7 +76,38 @@ class Battle
 		}
 
 		$this->outcome = $battleOutcome;
-		return json_encode($battleOutcome);	
+		
+		switch( $this->outcome_datatype ) 
+		{
+			case "xml":
+
+				$xml = new SimpleXMLElement('<xml></xml>');
+				
+				$attacker = $xml->addChild('attacker', $battleOutcome->attacker );
+				
+				$defender = $xml->addChild('defender', $battleOutcome->attacker );
+				
+				$attacker_rolls = $xml->addChild('attack_rolls');
+				
+				foreach( $battleOutcome->attack_rolls as $roll ) 
+				{
+					$attacker_rolls->addChild( 'value', $roll );
+				}
+			
+				$defender_rolls = $xml->addChild('defender_rolls');
+
+				foreach( $battleOutcome->defender_rolls as $roll ) 
+				{
+					$defender_rolls->addChild('value', $roll );
+				}
+
+				return $xml->asXML();
+				break;
+			case "json":
+			default:
+				return json_encode( $battleOutcome );
+				break;
+		}
 	}
 	
 	/**
@@ -117,12 +148,8 @@ $defenderPlayerDice = new PlayerDice('defender', 2, array(8, 6));
 //var_dump($rolls);
 
 $battle = new Battle($attackPlayerDice, $defenderPlayerDice);
+$battle->setOutcomeDataType('xml');
 
 echo $battle->startBattle();
-
-$xml = new SimpleXMLElement('<xml/>');
-
-echo $xml;
-
 
 ?>
